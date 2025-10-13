@@ -9,6 +9,41 @@
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
 void merge(int leftstart, int leftend, int rightstart, int rightend){
+	// merge 2 sorted subarrays A[leftstart..leftend] and A[rightstart..rightend] into B[]
+	int l = leftstart;				// index for the left subarray
+	int r = rightstart;				// index for the right subarray
+	int B_index = leftstart;		// index for the merged subarray B[]
+
+	// merge the two subarrays into B[]
+	while (l <= leftend && r <= rightend) {
+		// Insert the smaller element between the 2 subarr into B[]
+		if (A[l] <= A[r]) {
+			B[B_index] = A[l];
+			l++;
+			B_index++;
+		} else {
+			B[B_index] = A[r];	
+			r++;
+			B_index++;
+		}
+	}
+
+	// Clean up the remaining elements of the left subarray if any
+	while (l <= leftend) {
+		B[B_index] = A[l];
+		l++;
+		B_index++;		
+	}
+
+	// Clean up the remaining elements of the right subarray if any
+	while (r <= rightend) {
+		B[B_index] = A[r];
+		r++;
+		B_index++;
+	}
+
+	// Copy the merged subarray B[] back to A[]
+	memcpy(&A[leftstart], &B[leftstart], (rightend - leftstart + 1) * sizeof(int));
 }
 
 /* this function will be called by parallel_mergesort() as its base case. */
