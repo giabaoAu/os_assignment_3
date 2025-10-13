@@ -60,7 +60,42 @@ void my_mergesort(int left, int right){
 
 /* this function will be called by the testing program. */
 void * parallel_mergesort(void *arg){
+	// cast the argument to the correct type
+	struct argument *args = (struct argument *) arg;
+	int left = args->left;
+	int right = args->right;
+	int level = args->level;
+	
+	// base case: too snall subarray, use standard mergesort
+	if(left >= right) {
 		return NULL;
+	}
+
+	// If we have reached the cutoff level, use standard mergesort
+	if(level >= cutoff) {
+		my_mergesort(left, right);
+		return NULL;
+	}
+
+	// recursive case: keep creating threads to sort the left and right halves
+	int mid = (left + right) / 2;											// Find the mid point	
+	pthread_t left_thread, right_thread;									// Thread identifiers 
+	struct argument *left_args = buildArgs(left, mid, level + 1);			// Arguments for the left half
+	struct argument *right_args = buildArgs(mid + 1, right, level + 1);		// Arguments for the right half
+
+	// create threads to sort the left and right halves
+	pthread_create(&left_thread, NULL, parallel_mergesort, left_args);
+	pthread_create(&right_thread, NULL, parallel_mergesort, right_args);
+	
+	// parent thread waits for both child threads to finish
+	pthread_join(left_thread, NULL);
+	pthread_join(right_thread, NULL);
+
+	// merge the two sorted halves
+	merge(left, mid, mid + 1, right);
+
+	free(arg); // Free the allocated memory for args
+	return NULL;
 }
 
 /* we build the argument for the parallel_mergesort function. */
@@ -76,4 +111,3 @@ struct argument * buildArgs(int left, int right, int level){
 	// Return the pointer to the struct argument 
 	return arg;
 }
-
