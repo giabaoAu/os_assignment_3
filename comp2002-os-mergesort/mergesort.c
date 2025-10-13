@@ -83,9 +83,26 @@ void * parallel_mergesort(void *arg){
 	struct argument *left_args = buildArgs(left, mid, level + 1);			// Arguments for the left half
 	struct argument *right_args = buildArgs(mid + 1, right, level + 1);		// Arguments for the right half
 
-	// create threads to sort the left and right halves
-	pthread_create(&left_thread, NULL, parallel_mergesort, left_args);
-	pthread_create(&right_thread, NULL, parallel_mergesort, right_args);
+	// create threads to sort the left
+	if (pthread_create(&left_thread, NULL, parallel_mergesort, left_args) != 0) {
+		perror("Failed to create left thread");
+		// Fall-back to sequential sort if thread creation fails
+		my_mergesort(left, mid);
+		free(right_args);
+		return NULL;
+	}
+
+	// create threads to sort the right
+	if (pthread_create(&right_thread, NULL, parallel_mergesort, right_args) != 0) {
+		perror("Failed to create right thread");
+		
+		// if the code reached this point, it means the left thread was created successfully
+		// so we need to wait for it to finish before falling back to sequential sort
+		pthread_join(left_thread, NULL);
+		my_mergesort(mid + 1, right);
+		free(left_args);
+		return NULL;
+	}
 	
 	// parent thread waits for both child threads to finish
 	pthread_join(left_thread, NULL);
@@ -94,7 +111,11 @@ void * parallel_mergesort(void *arg){
 	// merge the two sorted halves
 	merge(left, mid, mid + 1, right);
 
-	free(arg); // Free the allocated memory for args
+	
+	// free the dynamically allocated arguments
+	free(left_args);
+	free(right_args);
+
 	return NULL;
 }
 
