@@ -1,4 +1,4 @@
-## Project Number/Title 
+## Project 3: Parallel Merge Sort (Pthreads) 
 * Authors: **Ngoc Thanh Uyen Ho (a1875049)**, **Gia Bao Au (a1897967)**
 * Group name: **UG Group 1**
 
@@ -28,16 +28,27 @@ make            # builds ./test-mergesort
 make clean      # removes objects and binary
 ```
 
-## Features and usage (NEED IMPROVED)
+## Features and usage
 
-Summarise the main features of your program. It is also appropriate to
-instruct the user how to use your program.
 **Binary:** `./test-mergesort`
 
 **Syntax:**
 
 ```
 ./test-mergesort <input size n> <cutoff level> <seed>
+```
+
+**Examples:**
+
+```bash
+# Sequential (single-threaded baseline)
+./test-mergesort 1000000 0 1234
+
+# Parallel with two levels (4 leaf tasks)
+./test-mergesort 1000000 2 1234
+
+# Larger input to observe speedup (machine dependent)
+./test-mergesort 100000000 3 42
 ```
 
 ## Testing
