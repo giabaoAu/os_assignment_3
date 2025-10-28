@@ -1,74 +1,10 @@
-README.template
-
 ## Project Number/Title 
-
-* Authors: Your Name, and your group members’ names
-* Group name: Your Group Name
-
-## Overview
-
-Concisely explain what the program does. If this exceeds a couple of
-sentences, you're going too far. Generally, you should be pulling this
-right from the project specification. We don't want you to just cut and
-paste, but paraphrase what is stated in the project specification.
-
-## Manifest
-
-A listing of source files and other non-generated files, and a brief
-(one-line) explanation of the purpose of each file.
-
-## Building the project
-
-This section should tell the user how to build your code.  If you are
-delivering a library, where does it need to be installed, or how do you use
-it? Is this an executable, if so, how can a user get up to speed as fast as
-possible?
-
-## Features and usage
-
-Summarise the main features of your program. It is also appropriate to
-instruct the user how to use your program.
-
-## Testing
-
-This section should detail how you tested your code. Simply stating "I ran
-it a few times and it seems to work" is not sufficient. Your testing needs
-to be detailed here.
-
-## Known Bugs
-
-List known bugs that you weren't able to fix (or ran out of time to fix).
-
-## Reflection and Self Assessment
-
-Discuss the issues you encountered during development and testing. What
-problems did you have? What did you have to research and learn on your own?
-What kinds of errors did you get? How did you fix them?
-
-What parts of the project did you find challenging? Is there anything that
-finally "clicked" for you in the process of working on this project? How well
-did the development and testing process go for you?
-
-## Sources Used
-
-If you used any sources outside of the textbook, you should list them here. 
-If you looked something up on stackoverflow.com or you use help from AI, and 
-fail to cite it in this section, it will be considered plagiarism and dealt 
-with accordingly. So be safe CITE!
-
-## Project 3 — Parallel Merge Sort (Pthreads)
-
 * Authors: **Ngoc Thanh Uyen Ho (a1875049)**, **Gia Bao Au (a1897967)**
-* Group name: **COMP2002-A3-Team-Uyen-Bao**
-
----
+* Group name: **UG Group 1**
 
 ## Overview
-
 We implemented a **multi-threaded merge sort** using **POSIX Threads (pthreads)**.
 The program sorts a randomly generated integer array. When `cutoff = 0`, it runs the **sequential** merge sort; when `cutoff > 0`, it performs a **parallel** merge sort by spawning two threads per level until the given cutoff depth, then merges results.
-
----
 
 ## Manifest
 
@@ -78,14 +14,12 @@ The program sorts a randomly generated integer array. When `cutoff = 0`, it runs
   * `my_mergesort(left, right)`: recursive **sequential** merge sort.
   * `parallel_mergesort(void *arg)`: recursive **parallel** merge sort driven by pthreads; falls back to `my_mergesort` at/after `cutoff`.
   * `buildArgs(left, right, level)`: packs indices/level into a heap-allocated `struct argument` for thread start.
-* `mergesort.h` — Header with function prototypes, `struct argument`, and extern globals `A`, `B`, `cutoff`. **Do not modify.**
-* `test-mergesort.c` — Provided harness: allocates `A`/`B`, fills `A` with random data, calls our sorter, checks order, and prints timing.
-* `Makefile` — Builds `test-mergesort` with `-pthread`.
-* `README.md` — This document.
+* `mergesort.h`: Header with function prototypes, `struct argument`, and extern globals `A`, `B`, `cutoff` (Do not modify part).
+* `test-mergesort.c`: Provided harness: allocates `A`/`B`, fills `A` with random data, calls our sorter, checks order, and prints timing.
+* `Makefile`:  Builds `test-mergesort` with `-pthread`.
+* `README.md`: This document.
 
----
-
-## Building the project
+## Building the project (NEED IMPROVED)
 
 Requirements: `gcc` (or compatible), POSIX pthreads.
 
@@ -94,10 +28,10 @@ make            # builds ./test-mergesort
 make clean      # removes objects and binary
 ```
 
----
+## Features and usage (NEED IMPROVED)
 
-## Features and usage
-
+Summarise the main features of your program. It is also appropriate to
+instruct the user how to use your program.
 **Binary:** `./test-mergesort`
 
 **Syntax:**
@@ -105,32 +39,6 @@ make clean      # removes objects and binary
 ```
 ./test-mergesort <input size n> <cutoff level> <seed>
 ```
-
-**Examples:**
-
-```bash
-# Sequential (single-threaded baseline)
-./test-mergesort 1000000 0 1234
-
-# Parallel with two levels (4 leaf tasks)
-./test-mergesort 1000000 2 1234
-
-# Larger input to observe speedup (machine dependent)
-./test-mergesort 100000000 3 42
-```
-
-**Key behaviour:**
-
-* **Cutoff = 0:** run `my_mergesort` only (no threads).
-* **Cutoff > 0:** in `parallel_mergesort`, each call:
-
-  1. Splits the range at `mid`,
-  2. Spawns two child threads (left/right) with `pthread_create`,
-  3. Waits via `pthread_join`,
-  4. Calls `merge` on the parent range.
-* Threads operate on **disjoint subarrays**, so no mutexes are required; ordering is enforced by `pthread_join` before merge.
-
----
 
 ## Testing
 
@@ -154,16 +62,10 @@ make clean      # removes objects and binary
 
 * Included a **fallback**: if `pthread_create` fails, that branch sorts sequentially to remain correct, then continues.
 
----
-
 ## Known Bugs
-
 * `printA()`/`printB()` in `test-mergesort.c` assume arrays have at least 100 elements (commented as `FIXME`). We do not use these in normal runs, but printing with very small `n` would be unsafe without changing those helpers.
 * Extremely constrained environments (very low RAM) may not handle `n = 100,000,000` due to memory for `A` and `B`.
 
----
-
-## Reflection and Self Assessment
 
 **What we built & why it works**
 
@@ -194,4 +96,3 @@ make clean      # removes objects and binary
 * Course lectures and textbook chapters on threads and the Pthreads API.
 * Linux man pages: `pthread_create(3)`, `pthread_join(3)`, `memcpy(3)`, `malloc(3)`, `free(3)`.
 * Assignment specification and starter code comments.
-* (If applicable) Explanatory guidance from AI (ChatGPT) was used for **understanding and documentation only**; all submitted code is authored and understood by the group.
