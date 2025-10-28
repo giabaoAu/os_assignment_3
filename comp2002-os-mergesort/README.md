@@ -19,9 +19,6 @@ The program sorts a randomly generated integer array. When `cutoff = 0`, it runs
 * `Makefile`:  Builds `test-mergesort` with `-pthread`.
 * `README.md`: This document.
 
-Not quite — here’s a **drop-in replacement** for those two sections with clearer steps, examples, and common pitfalls. You can paste this straight into your README.
-
----
 
 ## Building the project
 
@@ -53,7 +50,6 @@ make clean      # removes *.o, *.d, test-mergesort
   ```
 * On very small `n`, avoid using the debug printers in `test-mergesort.c` (they assume ≥100 elements).
 
----
 
 ## Features and usage
 
@@ -129,7 +125,6 @@ Sorting <n> elements took <seconds> seconds.
 * `printA()`/`printB()` in `test-mergesort.c` assume arrays have at least 100 elements (commented as `FIXME`). We do not use these in normal runs, but printing with very small `n` would be unsafe without changing those helpers.
 * Extremely constrained environments (very low RAM) may not handle `n = 100,000,000` due to memory for `A` and `B`.
 
----
 ## Reflection and Self Assessment
 **What we built & why it works**
 
@@ -152,8 +147,6 @@ Sorting <n> elements took <seconds> seconds.
 
 * Iterated from a working sequential `my_mergesort`, then layered parallelism and validated progressively (small → large inputs).
 * Used the harness timing to reason about useful `cutoff` values relative to available cores.
-
----
 
 ## Sources Used
 
