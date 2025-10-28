@@ -129,7 +129,8 @@ Sorting <n> elements took <seconds> seconds.
 * `printA()`/`printB()` in `test-mergesort.c` assume arrays have at least 100 elements (commented as `FIXME`). We do not use these in normal runs, but printing with very small `n` would be unsafe without changing those helpers.
 * Extremely constrained environments (very low RAM) may not handle `n = 100,000,000` due to memory for `A` and `B`.
 
-
+---
+## Reflection and Self Assessment
 **What we built & why it works**
 
 * Designed a **binary tree** of work: each node sorts a subarray; children complete before the parent merges.
