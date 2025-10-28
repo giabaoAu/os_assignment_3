@@ -19,37 +19,89 @@ The program sorts a randomly generated integer array. When `cutoff = 0`, it runs
 * `Makefile`:  Builds `test-mergesort` with `-pthread`.
 * `README.md`: This document.
 
-## Building the project (NEED IMPROVED)
+Not quite — here’s a **drop-in replacement** for those two sections with clearer steps, examples, and common pitfalls. You can paste this straight into your README.
 
-Requirements: `gcc` (or compatible), POSIX pthreads.
+---
+
+## Building the project
+
+**Requirements**
+
+* `gcc` (or compatible) with POSIX threads
+* A POSIX-like environment (Linux/macOS; Gradescope provides this)
+* Enough RAM for large runs (e.g., `n=100,000,000` needs ~760–800 MB for `A` and `B`)
+
+**Build**
 
 ```bash
-make            # builds ./test-mergesort
-make clean      # removes objects and binary
+make            # compiles test-mergesort with -pthread
 ```
+
+**Clean**
+
+```bash
+make clean      # removes *.o, *.d, test-mergesort
+```
+
+**Notes**
+
+* The Makefile already passes `-pthread` and warnings (`-Wall`, etc.).
+* If you see linker errors about pthreads on a custom toolchain, try:
+
+  ```bash
+  gcc -O2 -pthread -o test-mergesort test-mergesort.c mergesort.c
+  ```
+* On very small `n`, avoid using the debug printers in `test-mergesort.c` (they assume ≥100 elements).
+
+---
 
 ## Features and usage
 
-**Binary:** `./test-mergesort`
-
-**Syntax:**
+**Binary**
 
 ```
-./test-mergesort <input size n> <cutoff level> <seed>
+./test-mergesort
 ```
 
-**Examples:**
+**Syntax**
+
+```
+./test-mergesort <input_size_n> <cutoff_level> <seed>
+```
+
+* `input_size_n` — number of integers to sort (e.g., `1000000`, `100000000`)
+* `cutoff_level` — max thread-creation depth (`0` = sequential only)
+* `seed` — RNG seed to reproduce the same input
+
+**Examples**
 
 ```bash
-# Sequential (single-threaded baseline)
+# 1) Sequential baseline (no threads)
 ./test-mergesort 1000000 0 1234
 
-# Parallel with two levels (4 leaf tasks)
+# 2) Parallel, 2 levels (≈ 4 leaf tasks)
 ./test-mergesort 1000000 2 1234
 
-# Larger input to observe speedup (machine dependent)
+# 3) Large input to observe speedup (machine dependent)
 ./test-mergesort 100000000 3 42
 ```
+
+**Expected output format**
+
+```
+Sorting <n> elements took <seconds> seconds.
+```
+
+**Choosing a cutoff**
+
+* Rule of thumb: start near `log2(cores)` and adjust.
+* Too small → underutilised CPU; too large → thread overhead dominates.
+* On many 8–16-thread machines, `cutoff` in the range **3–5** works well.
+
+**Exit status**
+
+* `0` on success (array sorted).
+* Non-zero + message `sorting failed!!!!` if validation fails or arguments are invalid.
 
 ## Testing
 
